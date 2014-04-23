@@ -1,0 +1,40 @@
+<div class="form">
+ 
+ <form>
+ {{t "app.filters"}}
+  <select id="filter_select" name="filter_select">
+    <option value="all">
+      all
+    </option>
+    <option value="received">
+      received
+    </option> 
+    <option value="received_with_comment" selected>
+      received_with_comment
+    </option>
+    <option value="received_without_comment">
+      received_without_comment
+    </option>
+    <option value="good">
+      good
+    </option>
+    <option value="good_with_comment">
+      good_with_comment
+    </option>
+    <option value="good_without_comment">
+      good_without_comment
+    </option>
+    <option value="bad">
+      bad
+    </option>
+    <option value="bad_with_comment">
+      bad_with_comment
+    </option>
+    <option value="bad_without_comment">
+      bad_without_comment
+    </option>
+  </select> &nbsp;&nbsp;&nbsp;
+  <span>Days back: <input type="number" id="range" min="1" max="100" value="{{setting "Days Back"}}"></input></span>
+  <button class="submit btn btn-primary">Submit</button>
+ </form>
+</div>

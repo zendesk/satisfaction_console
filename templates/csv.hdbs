@@ -1,0 +1,49 @@
+<strong>{{t "app.filters"}}:</strong> <span class="label">{{filter}}</span> &nbsp;&nbsp;&nbsp;
+<strong>{{t "app.range"}}:</strong> <span class="badge">{{daysBack}}</span><br><br>
+
+<button class="show_form btn"><i class="icon-edit"></i> Change Options</button> &nbsp;
+<a href="data:application/octet-stream,ID%2CScore%2CAssignee%2CCreated%2CComment%0A{{#encoded_ratings}}#{{ticket_id}}%2C{{score}}%2C{{assignee}}%2C{{created_at}}%2C%22{{comment}}%22%0A{{/encoded_ratings}}" download="satisfaction_ratings.csv" class="btn"><i class="icon-download"></i> Download CSV</a>
+<br>
+<br>
+<div class="csv">
+  <div class="ratings">
+    <table class="table">
+      <thead>
+        <th>
+          <td>Ticket</td>
+          <td colspan='2'>Rating</td>
+          <td>Assignee</td>
+          <td>Created</td>
+          <td>Comment</td>
+        </th>
+      </thead>
+      {{#ratings}}
+          <tr class="row">
+            <td class="ticket_id" data-rating-id="{{id}}">
+              <a href="#/tickets/{{ticket_id}}">#{{ticket_id}}</a>
+            </td>
+            <td class="thumb">
+              {{{thumb}}}
+            </td>
+            <td class="score">
+              {{{score}}}
+            </td>
+            <td class="assignee">
+              {{assignee}}
+            </td>
+            <td class="created_at">
+              {{created_at}}
+            </td>
+            <td class="sat_comment">
+              {{# if comment.length}}{{comment}}{{else}}<em>-no comment-</em>{{/if}}
+            </td>
+          </tr>
+      {{/ratings}}
+    </table>
+
+
+  </div>
+  {{# unless ratings}}
+    No ratings match the filters. Try again.
+  {{/unless}}
+</div>

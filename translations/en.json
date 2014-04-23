@@ -1,0 +1,9 @@
+{
+  "app": {
+    "description":  "Keep an eye on your team's satisfaction ratings.",
+    "name":         "Satisfaction Console",
+    "loading":      "Loading",
+    "filters":      "Filter",
+    "range":        "Days back"
+  }
+}

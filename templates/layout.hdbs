@@ -1,0 +1,7 @@
+<header>
+  <span class="logo"/>
+  <span class="title"><h4>{{setting "name"}}</h4></span>
+</header>
+<section data-main/>
+<footer>
+</footer>

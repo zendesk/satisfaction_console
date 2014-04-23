@@ -1,0 +1,38 @@
+<h4>{{t "app.filters"}}: {{filter}}&nbsp;<button class="show_form">Change Filters</button></h4><br><br>
+<div class="list">
+  <ul class="list">
+    {{#if ratings}}
+      <div class="row table_head">
+        <li class="table_head list ticket_id">ID</li>
+        <li class="table_head list created_at">Rated</li>
+        <li class="table_head list updated_at">Updated</li>
+        <li class="table_head list score">Type</li>
+        <li class="table_head list sat_comment">Comment</li>
+        <br>
+      </div>
+    {{/if}}
+    {{#ratings}}
+    <div class="row">
+      <li class="list ticket_id" data-rating-id="{{id}}">
+        <a href="#/tickets/{{ticket_id}}">#{{ticket_id}}</a>
+      </li>
+      <li class="list created_at">
+        {{created_at}}
+      </li>
+      <li class="list updated_at">
+        {{updated_at}}
+      </li>
+      <li class="list score">
+        {{score}}
+      </li>
+      <li class="list sat_comment">
+        {{# if comment.length}}{{comment}}{{else}}<em>-no comment-</em>{{/if}}
+      </li>
+      <br>
+    </div>
+    {{/ratings}}
+    {{# unless ratings}}
+      No ratings match the filters. Try again.
+    {{/unless}}
+  </ul>
+</div>

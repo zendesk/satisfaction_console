@@ -1,0 +1,3 @@
+<div class="loading">
+ {{t "app.loading"}}... {{spinner "dotted"}}
+</div>

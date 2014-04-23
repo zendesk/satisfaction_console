@@ -1,0 +1,30 @@
+{
+  "name": "Satisfaction Console",
+  "author": {
+    "name": "Joe McCarron",
+    "email": "joe@zendesk.com"
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "location": "nav_bar",
+  "version": "0.9",
+  "frameworkVersion": "0.5",
+  "parameters": [
+  {
+    "name": "Auto Load",
+    "type": "checkbox",
+    "default": "true"
+  },
+  {
+    "name": "Default Filter",
+    "type": "text",
+    "default": "received_with_comment"
+  },
+  {
+    "name": "Days Back",
+    "type": "number",
+    "default": "5"
+  }
+  ]
+}
+
