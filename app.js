@@ -149,8 +149,6 @@
           created_at: encodeURIComponent(this.ratings[n].created_at),
           comment: encodeURIComponent(this.ratings[n].comment)
         };
-        console.log(this.ratings[n].assignee_id);
-        console.log(this.user_i);
         if (this.ratings[n].assignee_id) {
           this.ajax('getUser', this.ratings[n].assignee_id, n, 'assignee');
         } else {
@@ -161,7 +159,6 @@
         //console.log("Next one created at: " + this.ratings[n].created_at + ", " + ratingMs);
         n++;
       }
-      console.log(this.unencoded);
       // this.switchTo('csv', {
       //   ratings: this.unencoded,
       //   encoded_ratings: this.encoded,
@@ -172,7 +169,6 @@
     },
     addUserName: function(data, n, role) {
       this.user_i++;
-      console.log(this.user_i);
       var user = data.user,
         userName = user.name;
         // console.log(userName);
