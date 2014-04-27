@@ -115,6 +115,7 @@
         this.loadRatings(this.filter, data.next_page);
       } else if (data.previous_page===null && data.next_page===null) {
         this.ratings = ratings;
+        this.encodeRatings();
       } else {
         this.ratings = this.ratings.concat(ratings);
         //console.log("Stopping load at a last rating of " + this.lastRatingMs + " ms \/ " + this.startDate + " start date");
@@ -136,10 +137,10 @@
         //add thumb
         if(this.ratings[n].score == 'good') {
           this.unencoded[n].thumb = '<i class="icon-thumbs-up"></i>';
-          this.unencoded[n].score = helpers.fmt("<span class='label label-success'>%@</span>", this.unencoded[n].score);
+          this.unencoded[n].score_label = helpers.fmt("<span class='label label-success'>%@</span>", this.unencoded[n].score);
         } else if (this.ratings[n].score == 'bad') {
           this.unencoded[n].thumb = '<i class="icon-thumbs-down"></i>';
-          this.unencoded[n].score = helpers.fmt("<span class='label label-important'>%@</span>", this.unencoded[n].score);
+          this.unencoded[n].score_label = helpers.fmt("<span class='label label-important'>%@</span>", this.unencoded[n].score);
         }
         this.encoded[n] = {
           ticket_id: encodeURIComponent(this.ratings[n].ticket_id),

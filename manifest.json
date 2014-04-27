@@ -7,8 +7,8 @@
   "defaultLocale": "en",
   "private": true,
   "location": "nav_bar",
-  "version": "1.0",
-  "frameworkVersion": "0.5",
+  "version": "1.0.1",
+  "frameworkVersion": "1.0",
   "parameters": [
   {
     "name": "Auto Load",
