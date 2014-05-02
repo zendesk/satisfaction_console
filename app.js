@@ -129,11 +129,41 @@
       this.user_i = 0;
       this.unencoded = [];
       this.encoded = [];
+
+      // try a more efficient way to filter by date
+      // console.log(this.ratings);
+      // console.log(Date.parse(this.ratings[0].created_at));
+      // console.log(this.startDate);
+      // var start_date = this.startDate;
+      // var ratingsInRange = _.filter(this.ratings, function(rating){
+      //   var created_date = Date.parse(rating.created_at);
+      //   return created_date > start_date;
+      // });
+      // // console.log(ratingsInRange);
+
+      // _.each(ratingsInRange, function(rating) {
+      //   // format date
+      //   rating.created_at = new Date(rating.created_at);
+      //   rating.created_at = rating.created_at.toLocaleDateString();
+        
+
+      // });
+
+
+
+
+
+      // the old way
       while (ratingMs > this.startDate) {
+        // add ratings in range
         this.unencoded[n] = this.ratings[n];
+        // console.log('rating ' + n + ' in range');
+        // console.log(this.unencoded[n]);
+
         //format date
         var locale_string = new Date(this.ratings[n].created_at);
         this.unencoded[n].created_at = locale_string.toLocaleDateString();
+
         //add thumb
         if(this.ratings[n].score == 'good') {
           this.unencoded[n].thumb = '<i class="icon-thumbs-up"></i>';
@@ -142,6 +172,7 @@
           this.unencoded[n].thumb = '<i class="icon-thumbs-down"></i>';
           this.unencoded[n].score_label = helpers.fmt("<span class='label label-important'>%@</span>", this.unencoded[n].score);
         }
+        // encode ratings in range
         this.encoded[n] = {
           ticket_id: encodeURIComponent(this.ratings[n].ticket_id),
           score: encodeURIComponent(this.ratings[n].score),
@@ -154,6 +185,12 @@
           this.ajax('getUser', this.ratings[n].assignee_id, n, 'assignee');
         } else {
           this.user_i++;
+          // bug fix?
+          if(this.user_i == this.unencoded.length) {
+            services.notify('No ratings in range.', 'error');
+            this.switchTo('form');
+
+          }
         }
         //this.ajax('getOrg', this.ratings[n].organization_id, n);
         ratingMs = Date.parse(this.ratings[n].created_at);

@@ -18,26 +18,26 @@
         </th>
       </thead>
       {{#ratings}}
-          <tr class="row">
-            <td class="ticket_id" data-rating-id="{{id}}">
-              <a href="#/tickets/{{ticket_id}}">#{{ticket_id}}</a>
-            </td>
-            <td class="thumb">
-              {{{thumb}}}
-            </td>
-            <td class="score">
-              {{{score_label}}}
-            </td>
-            <td class="assignee">
-              {{assignee}}
-            </td>
-            <td class="created_at">
-              {{created_at}}
-            </td>
-            <td class="sat_comment">
-              {{# if comment.length}}{{comment}}{{else}}<em>-no comment-</em>{{/if}}
-            </td>
-          </tr>
+        <tr class="row">
+          <td class="ticket_id" data-rating-id="{{id}}">
+            <a href="#/tickets/{{ticket_id}}">#{{ticket_id}}</a>
+          </td>
+          <td class="thumb">
+            {{{thumb}}}
+          </td>
+          <td class="score">
+            {{{score_label}}}
+          </td>
+          <td class="assignee">
+            {{assignee}}
+          </td>
+          <td class="created_at">
+            {{created_at}}
+          </td>
+          <td class="sat_comment">
+            {{# if comment.length}}{{comment}}{{else}}<em>-no comment-</em>{{/if}}
+          </td>
+        </tr>
       {{/ratings}}
     </table>
 
