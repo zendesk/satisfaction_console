@@ -9,7 +9,7 @@
     <option value="received">
       received
     </option> 
-    <option value="received_with_comment" selected>
+    <option value="received_with_comment">
       received_with_comment
     </option>
     <option value="received_without_comment">
@@ -34,7 +34,7 @@
       bad_without_comment
     </option>
   </select> &nbsp;&nbsp;&nbsp;
-  <span>Days back: <input type="number" id="range" min="1" max="100" value="{{setting "Days Back"}}"></input></span>
+  <span>Days back: <input type="number" id="range" min="1" max="100" value="{{daysBack}}"></input></span>
   <button class="submit btn btn-primary">Submit</button>
  </form>
 </div>

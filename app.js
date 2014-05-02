@@ -6,7 +6,10 @@
       'click .submit':'loadChoices',
       'click .show_form': function(e) {
         if (e) { e.preventDefault(); }
-        this.switchTo('form');
+        this.switchTo('form', {
+          daysBack: this.daysBack
+        });
+        this.$('#filter_select').val(this.filter);
       },
       //request events
       'getFilteredRatings.done':'parseSatRatings',
@@ -67,7 +70,10 @@
       if (autoLoad===true) {
         this.loadRatings(filter);
       } else{
-        this.switchTo('form');
+        this.switchTo('form', {
+          daysBack: this.daysBack
+        });
+        this.$('#filter_select').val(filter);
       }
     },
     loadChoices: function(e) {
@@ -127,29 +133,63 @@
         ratingMs = Date.now();
         //console.log("Now: " + ratingMs);
       this.user_i = 0;
-      this.unencoded = [];
+      // this.unencoded = [];
       this.encoded = [];
 
       // try a more efficient way to filter by date
       // console.log(this.ratings);
       // console.log(Date.parse(this.ratings[0].created_at));
       // console.log(this.startDate);
-      // var start_date = this.startDate;
-      // var ratingsInRange = _.filter(this.ratings, function(rating){
-      //   var created_date = Date.parse(rating.created_at);
-      //   return created_date > start_date;
-      // });
-      // // console.log(ratingsInRange);
-
-      // _.each(ratingsInRange, function(rating) {
-      //   // format date
-      //   rating.created_at = new Date(rating.created_at);
-      //   rating.created_at = rating.created_at.toLocaleDateString();
+      var start_date = this.startDate;
+      this.unencoded = _.filter(this.ratings, function(rating){
+        var created_date = Date.parse(rating.created_at);
+        return created_date > start_date;
+      });
+      // console.log(this.unencoded);
+      if(!this.unencoded[0]) {
+        services.notify('No ratings in range.', 'error');
+        this.switchTo('form', {
+          daysBack: this.daysBack,
+        });
+        this.$('#filter_select').val(this.filter);
+        return;
+      }
+      _.each(this.unencoded, function(rating, n) {
+        // format date
+        rating.created_at = new Date(rating.created_at);
+        rating.created_at = rating.created_at.toLocaleDateString();
         
+        //add thumb
+        if(rating.score == 'good') {
+          rating.thumb = '<i class="icon-thumbs-up"></i>';
+          rating.score_label = helpers.fmt("<span class='label label-success'>%@</span>", rating.score);
+        } else if (rating.score == 'bad') {
+          rating.thumb = '<i class="icon-thumbs-down"></i>';
+          rating.score_label = helpers.fmt("<span class='label label-important'>%@</span>", rating.score);
+        }
+        // encode ratings in range
+        this.encoded[n] = {
+          ticket_id: encodeURIComponent(rating.ticket_id),
+          score: encodeURIComponent(rating.score),
+          organization_id: encodeURIComponent(rating.organization_id),
+          assignee_id: encodeURIComponent(rating.assignee_id),
+          created_at: encodeURIComponent(rating.created_at),
+          comment: encodeURIComponent(rating.comment)
+        };
+        if (rating.assignee_id) {
+          this.ajax('getUser', rating.assignee_id, n, 'assignee');
+        } else {
+          this.user_i++;
 
-      // });
 
 
+          this.endLoop(n);
+        }
+
+
+      }.bind(this));
+
+      return;
 
 
 
@@ -182,27 +222,23 @@
           comment: encodeURIComponent(this.ratings[n].comment)
         };
         if (this.ratings[n].assignee_id) {
-          this.ajax('getUser', this.ratings[n].assignee_id, n, 'assignee');
+          this.ajax('getUser', rating.assignee_id, n, 'assignee');
         } else {
           this.user_i++;
-          // bug fix?
-          if(this.user_i == this.unencoded.length) {
-            services.notify('No ratings in range.', 'error');
-            this.switchTo('form');
-
-          }
+          
+          
         }
+        // if(this.user_i == this.unencoded.length) {
+        //     services.notify('No ratings in range.', 'error');
+        //     this.switchTo('form');
+
+        //   }
+
         //this.ajax('getOrg', this.ratings[n].organization_id, n);
         ratingMs = Date.parse(this.ratings[n].created_at);
         //console.log("Next one created at: " + this.ratings[n].created_at + ", " + ratingMs);
         n++;
       }
-      // this.switchTo('csv', {
-      //   ratings: this.unencoded,
-      //   encoded_ratings: this.encoded,
-      //   filter: this.filter,
-      //   daysBack: this.daysBack
-      // });
       
     },
     addUserName: function(data, n, role) {
@@ -210,10 +246,21 @@
       var user = data.user,
         userName = user.name;
         // console.log(userName);
-        this.unencoded[n].assignee = userName;
-        this.encoded[n].assignee = encodeURIComponent(userName);
+      this.unencoded[n].assignee = userName;
+      this.encoded[n].assignee = encodeURIComponent(userName);
         //this.unencoded[n].requester = userName;
         //this.encoded[n].requester = encodeURIComponent(userName);
+      // if(this.user_i == this.unencoded.length) {
+      //   this.switchTo('csv', {
+      //     ratings: this.unencoded,
+      //     encoded_ratings: this.encoded,
+      //     filter: this.filter,
+      //     daysBack: this.daysBack
+      //   });
+      // }
+      this.endLoop(n);
+    },
+    endLoop: function(n) {
       if(this.user_i == this.unencoded.length) {
         this.switchTo('csv', {
           ratings: this.unencoded,
