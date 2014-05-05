@@ -4,13 +4,7 @@
     events: {
       'app.activated':'getDate',
       'click .submit':'loadChoices',
-      'click .show_form': function(e) {
-        if (e) { e.preventDefault(); }
-        this.switchTo('form', {
-          daysBack: this.daysBack
-        });
-        this.$('#filter_select').val(this.filter);
-      },
+      'click .show_form': 'loadForm',
       //request events
       'getFilteredRatings.done':'parseSatRatings',
       'getAllRatings.done':'parseSatRatings'
@@ -64,23 +58,27 @@
       this.loadSettings();
     },
     loadSettings: function() {
-      var filter = this.setting('Default Filter'),
-          autoLoad = this.setting('Auto Load');
+      this.filter = this.setting('Default Filter');
+      var autoLoad = this.setting('Auto Load');
       this.daysBack = this.setting('Days Back');
       if (autoLoad===true) {
-        this.loadRatings(filter);
+        this.loadRatings(this.filter);
       } else{
-        this.switchTo('form', {
-          daysBack: this.daysBack
-        });
-        this.$('#filter_select').val(filter);
+        this.loadForm();
       }
+    },
+    loadForm: function(e) {
+      if (e) { e.preventDefault(); }
+      this.switchTo('form', {
+        daysBack: this.daysBack
+      });
+      this.$('#filter_select').val(this.filter);
     },
     loadChoices: function(e) {
       if (e) { e.preventDefault(); }
-      var filter = this.$('#filter_select').val();
+      this.filter = this.$('#filter_select').val();
       this.daysBack = this.$('#range').val();
-      this.loadRatings(filter);
+      this.loadRatings(this.filter);
       this.switchTo('loading');
     },
     loadRatings: function(filter, next_page_url) {
@@ -148,10 +146,7 @@
       // console.log(this.unencoded);
       if(!this.unencoded[0]) {
         services.notify('No ratings in range.', 'error');
-        this.switchTo('form', {
-          daysBack: this.daysBack,
-        });
-        this.$('#filter_select').val(this.filter);
+        this.loadForm();
         return;
       }
       _.each(this.unencoded, function(rating, n) {
@@ -190,55 +185,6 @@
       }.bind(this));
 
       return;
-
-
-
-      // the old way
-      while (ratingMs > this.startDate) {
-        // add ratings in range
-        this.unencoded[n] = this.ratings[n];
-        // console.log('rating ' + n + ' in range');
-        // console.log(this.unencoded[n]);
-
-        //format date
-        var locale_string = new Date(this.ratings[n].created_at);
-        this.unencoded[n].created_at = locale_string.toLocaleDateString();
-
-        //add thumb
-        if(this.ratings[n].score == 'good') {
-          this.unencoded[n].thumb = '<i class="icon-thumbs-up"></i>';
-          this.unencoded[n].score_label = helpers.fmt("<span class='label label-success'>%@</span>", this.unencoded[n].score);
-        } else if (this.ratings[n].score == 'bad') {
-          this.unencoded[n].thumb = '<i class="icon-thumbs-down"></i>';
-          this.unencoded[n].score_label = helpers.fmt("<span class='label label-important'>%@</span>", this.unencoded[n].score);
-        }
-        // encode ratings in range
-        this.encoded[n] = {
-          ticket_id: encodeURIComponent(this.ratings[n].ticket_id),
-          score: encodeURIComponent(this.ratings[n].score),
-          organization_id: encodeURIComponent(this.ratings[n].organization_id),
-          assignee_id: encodeURIComponent(this.ratings[n].assignee_id),
-          created_at: encodeURIComponent(this.ratings[n].created_at),
-          comment: encodeURIComponent(this.ratings[n].comment)
-        };
-        if (this.ratings[n].assignee_id) {
-          this.ajax('getUser', rating.assignee_id, n, 'assignee');
-        } else {
-          this.user_i++;
-          
-          
-        }
-        // if(this.user_i == this.unencoded.length) {
-        //     services.notify('No ratings in range.', 'error');
-        //     this.switchTo('form');
-
-        //   }
-
-        //this.ajax('getOrg', this.ratings[n].organization_id, n);
-        ratingMs = Date.parse(this.ratings[n].created_at);
-        //console.log("Next one created at: " + this.ratings[n].created_at + ", " + ratingMs);
-        n++;
-      }
       
     },
     addUserName: function(data, n, role) {
