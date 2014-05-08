@@ -19,7 +19,7 @@
         
       },
       //not strictly necessary
-      getAllRatings: function(filter, next_page_url) {
+      getAllRatings: function(next_page_url) {
         if (next_page_url) {
           return { url: next_page_url };
         } else {
@@ -95,11 +95,11 @@
         // but so does the API and it doesn't complain. plus the UI restricts it.
       } else{
         if (next_page_url) {
-          this.filter = 'none';
+          this.filter = 'all';
           //console.log("Loading next page of ratings...\n ...w/o a filter");
           this.ajax('getAllRatings', next_page_url);
         } else {
-          this.filter = 'none';
+          this.filter = 'all';
           //console.log("Loading ratings...\n ...w/o a filter");
           this.ajax('getAllRatings');
         }
