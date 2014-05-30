@@ -14,7 +14,7 @@
         if (next_page_url) {
           return { url: next_page_url + '&score=' + filter };
         } else {
-          return { url: '/api/v2/satisfaction_ratings.json?&sort_order=desc&score=' + filter };
+          return { url: '/api/v2/satisfaction_ratings.json?sort_order=desc&score=' + filter };
         }
         
       },
@@ -94,6 +94,7 @@
         //this conditional isn't stricly necessary. it restricts the parameter value,
         // but so does the API and it doesn't complain. plus the UI restricts it.
       } else{
+
         if (next_page_url) {
           this.filter = 'all';
           //console.log("Loading next page of ratings...\n ...w/o a filter");
@@ -107,22 +108,35 @@
     },
     parseSatRatings: function(data) {
       var ratings = data.satisfaction_ratings;
+      if(data.count === 0) {
+        services.notify('No ratings in range.', 'error');
+        this.loadForm();
+        return;
+      }
       this.startDate = this.dateMs - (this.daysBack * 86400000);
       //check the date of the last rating on the page
       this.lastRatingMs = Date.parse(ratings[ratings.length - 1].created_at);
-      //console.log(this.lastRatingMs);
       if (data.previous_page===null && data.next_page) {
+        // if this is the first of multiple pages
+        // set the global ratings to the results
         this.ratings = ratings;
+        // load the next page
         this.loadRatings(this.filter, data.next_page);
       } else if (data.previous_page && data.next_page && this.lastRatingMs > this.startDate) {
+        // if this is not the first page, there is another page, and the last rating on this page is more recent than the startDate
+        // set the global ratings to the existing set concantenated to the results
         this.ratings = this.ratings.concat(ratings);
+        // load the next page
         this.loadRatings(this.filter, data.next_page);
       } else if (data.previous_page===null && data.next_page===null) {
+        // if there is only one page of results
         this.ratings = ratings;
+        // move to the next step
         this.encodeRatings();
       } else {
+        // if this is the last of multiple pages (in range)
         this.ratings = this.ratings.concat(ratings);
-        //console.log("Stopping load at a last rating of " + this.lastRatingMs + " ms \/ " + this.startDate + " start date");
+        // move to the next step
         this.encodeRatings();
       }
     },
@@ -150,6 +164,7 @@
         return;
       }
       _.each(this.unencoded, function(rating, n) {
+      // massage the data...
         // format date
         rating.created_at = new Date(rating.created_at);
         rating.created_at = rating.created_at.toLocaleDateString();
@@ -175,35 +190,17 @@
           this.ajax('getUser', rating.assignee_id, n, 'assignee');
         } else {
           this.user_i++;
-
-
-
           this.endLoop(n);
         }
-
-
       }.bind(this));
-
       return;
-      
     },
     addUserName: function(data, n, role) {
       this.user_i++;
       var user = data.user,
         userName = user.name;
-        // console.log(userName);
       this.unencoded[n].assignee = userName;
       this.encoded[n].assignee = encodeURIComponent(userName);
-        //this.unencoded[n].requester = userName;
-        //this.encoded[n].requester = encodeURIComponent(userName);
-      // if(this.user_i == this.unencoded.length) {
-      //   this.switchTo('csv', {
-      //     ratings: this.unencoded,
-      //     encoded_ratings: this.encoded,
-      //     filter: this.filter,
-      //     daysBack: this.daysBack
-      //   });
-      // }
       this.endLoop(n);
     },
     endLoop: function(n) {
