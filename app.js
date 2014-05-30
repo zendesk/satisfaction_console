@@ -109,7 +109,7 @@
     parseSatRatings: function(data) {
       var ratings = data.satisfaction_ratings;
       if(data.count === 0) {
-        services.notify('No ratings in range.', 'error');
+        services.notify('No ratings pass that filter.', 'error');
         this.loadForm();
         return;
       }
