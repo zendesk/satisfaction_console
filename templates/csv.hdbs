@@ -1,10 +1,11 @@
 <strong>{{t "app.filters"}}:</strong> <span class="label">{{filter}}</span> &nbsp;&nbsp;&nbsp;
-<strong>{{t "app.range"}}:</strong> <span class="badge">{{daysBack}}</span><br><br>
+<strong>{{t "app.range"}}:</strong> {{startDate}} - {{endDate}}<br><br>
 
 <button class="show_form btn"><i class="icon-edit"></i> Change Options</button> &nbsp;
-<a href="data:application/octet-stream,ID%2CScore%2CAssignee%2CCreated%2CComment%0A{{#encoded_ratings}}#{{ticket_id}}%2C{{score}}%2C{{assignee}}%2C{{created_at}}%2C%22{{comment}}%22%0A{{/encoded_ratings}}" download="satisfaction_ratings.csv" class="btn"><i class="icon-download"></i> Download CSV</a>
+<a href="data:text/csv;charset=utf-8,ID%2CScore%2CAssignee%2CCreated%2CComment%0A{{#encoded_ratings}}#{{ticket_id}}%2C{{score}}%2C{{assignee}}%2C{{created_at}}%2C%22{{comment}}%22%0A{{/encoded_ratings}}" download="satisfaction_ratings.csv" class="btn"><i class="icon-download"></i> Download CSV</a>
 <br>
 <br>
+<div class="alert hidden">There is an outstanding bug with Chrome causing the file to download without a .csv extension. Just rename it to something.csv and open as normal.</div>
 <div class="csv well well-medium>
   <div class="ratings">
     <table class="table">
@@ -23,19 +24,19 @@
             <a href="#/tickets/{{ticket_id}}">#{{ticket_id}}</a>
           </td>
           <td class="thumb">
-            {{{thumb}}}
+            {{# if thumb.length}}{{{thumb}}}{{else}}<em>n/a</em>{{/if}}
           </td>
           <td class="score">
-            {{{score_label}}}
+            {{# if score_label.length}}{{{score_label}}}{{/if}}
           </td>
           <td class="assignee">
-            {{assignee}}
+            {{# if assignee}}{{assignee}}{{else}}-{{/if}}
           </td>
           <td class="created_at">
             {{created_at}}
           </td>
           <td class="sat_comment">
-            {{# if comment.length}}{{comment}}{{else}}<em>-no comment-</em>{{/if}}
+            {{# if comment.length}}{{comment}}{{else}}<em>n/a</em>{{/if}}
           </td>
         </tr>
       {{/ratings}}

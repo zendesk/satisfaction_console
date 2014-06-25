@@ -18,8 +18,7 @@
         }
         
       },
-      //not strictly necessary
-      getAllRatings: function(next_page_url) {
+      getAllRatings: function(next_page_url) { //not strictly necessary (see below)
         if (next_page_url) {
           return { url: next_page_url };
         } else {
@@ -38,14 +37,24 @@
           url: '/api/v2/organizations/' + id + '.json',
           success: function(data){this.addOrgName(data, n);}
         };
+      },
+      getTicket: function(id) {
+        return {
+          url: helpers.fmt('/api/v2/tickets/%@.json', id)
+        };
+      },
+      getTickets: function(id_string) { // id_string should contain a string like: 12345,37658,37943
+        return {
+          url: helpers.fmt('/api/v2/tickets/show_many.json?ids=%@', id_string)
+        };
       }
     },
     //NAMED FUNCTIONS
     getDate: function() {
-      var t = new Date();
-      var d = t.getDate();
-      var m = t.getMonth()+1;
-      var y = t.getFullYear();
+      var t = new Date(),
+        d = t.getDate(),
+        m = t.getMonth()+1,
+        y = t.getFullYear();
       if (d < 10){
         d = '0' + d;
       }
@@ -54,7 +63,6 @@
       }
       this.datePretty = m + '/' + d + '/' + y;
       this.dateMs = Date.now();
-      //console.log("1. Get the Date: " + this.dateMs);
       this.loadSettings();
     },
     loadSettings: function() {
@@ -73,35 +81,36 @@
         daysBack: this.daysBack
       });
       this.$('#filter_select').val(this.filter);
+      var daysBack = this.setting('Days Back');
+      var start_date = new Date(new Date().setDate(new Date().getDate() - daysBack));
+      this.$('.start_date').datepicker().datepicker("setDate", start_date);
+      this.$('.end_date').datepicker();
+      this.$('.end_date').datepicker("setDate", new Date());
     },
     loadChoices: function(e) {
       if (e) { e.preventDefault(); }
-      this.filter = this.$('#filter_select').val();
-      this.daysBack = this.$('#range').val();
-      this.loadRatings(this.filter);
+      var filter = this.$('#filter_select').val();
+      this.startDate = Date.parse(this.$('.start_date').val());
+      var date = new Date(new Date().setDate( new Date( this.$('.end_date').val() ).getDate() + 1) );
+      this.endDateAdjusted = Date.parse(date);
+      this.endDate = Date.parse(this.$('.end_date').val());
+      this.loadRatings(filter);
       this.switchTo('loading');
     },
     loadRatings: function(filter, next_page_url) {
       if (filter == 'received' || filter == 'received_with_comment' || filter == 'received_without_comment' || filter == 'good' || filter == 'good_with_comment' || filter == 'good_without_comment' || filter == 'bad' || filter == 'bad_with_comment' || filter == 'bad_without_comment') {
         this.filter = filter;
         if (next_page_url) {
-          //console.log("Loading next page of ratings...\n ...w/ filter: " + filter + "\n  ...and url: " + next_page_url);
           this.ajax('getFilteredRatings', filter, next_page_url);
         } else {
-          //console.log("Loading ratings...\n ...w/ filter: " + filter + "\n  ...and no url(?) " + next_page_url);
           this.ajax('getFilteredRatings', filter);
         }
-        //this conditional isn't stricly necessary. it restricts the parameter value,
-        // but so does the API and it doesn't complain. plus the UI restricts it.
-      } else{
-
+      } else {//this conditional isn't stricly necessary. it restricts the parameter value, but so does the API and it doesn't complain. plus the UI restricts it.
         if (next_page_url) {
           this.filter = 'all';
-          //console.log("Loading next page of ratings...\n ...w/o a filter");
           this.ajax('getAllRatings', next_page_url);
         } else {
           this.filter = 'all';
-          //console.log("Loading ratings...\n ...w/o a filter");
           this.ajax('getAllRatings');
         }
       }
@@ -113,12 +122,8 @@
         this.loadForm();
         return;
       }
-      this.startDate = this.dateMs - (this.daysBack * 86400000);
-      //check the date of the last rating on the page
-      this.lastRatingMs = Date.parse(ratings[ratings.length - 1].created_at);
-      if (data.previous_page===null && data.next_page) {
-        // if this is the first of multiple pages
-        // set the global ratings to the results
+      this.lastRatingMs = Date.parse(ratings[ratings.length - 1].created_at); // check the date of the last rating on the page
+      if (data.previous_page===null && data.next_page) { // if this is the first of multiple pages -> set the global ratings to the results
         this.ratings = ratings;
         // load the next page
         this.loadRatings(this.filter, data.next_page);
@@ -143,19 +148,13 @@
     encodeRatings: function() {
       var n = 0,
         ratingMs = Date.now();
-        //console.log("Now: " + ratingMs);
       this.user_i = 0;
-      // this.unencoded = [];
       this.encoded = [];
-
-      // try a more efficient way to filter by date
-      // console.log(this.ratings);
-      // console.log(Date.parse(this.ratings[0].created_at));
-      // console.log(this.startDate);
-      var start_date = this.startDate;
+      var start_date = this.startDate,
+        end_date = this.endDateAdjusted;
       this.unencoded = _.filter(this.ratings, function(rating){
         var created_date = Date.parse(rating.created_at);
-        return created_date > start_date;
+        return created_date >= start_date && created_date <= end_date;
       });
       // console.log(this.unencoded);
       if(!this.unencoded[0]) {
@@ -205,11 +204,16 @@
     },
     endLoop: function(n) {
       if(this.user_i == this.unencoded.length) {
+        var startDate = new Date(this.startDate),
+          endDate = new Date(this.endDate);
+        var startDateString = startDate.toLocaleDateString(),
+          endDateString = endDate.toLocaleDateString();
         this.switchTo('csv', {
           ratings: this.unencoded,
           encoded_ratings: this.encoded,
           filter: this.filter,
-          daysBack: this.daysBack
+          startDate: startDateString,
+          endDate: endDateString
         });
       }
     },

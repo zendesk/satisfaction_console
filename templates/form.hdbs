@@ -34,7 +34,13 @@
       bad_without_comment
     </option>
   </select> &nbsp;&nbsp;&nbsp;
-  <span>Days back: <input type="number" id="range" min="1" max="100" value="{{daysBack}}"></input></span>
+  {{!-- <span>Days back: <input type="number" id="range" min="1" max="100" value="{{daysBack}}"></input></span> --}}
+  <span class="field">
+    Start Date (UTC): <input class="start_date" name="start_date"></input> 
+  </span>
+  <span class="field">
+    End Date (UTC): <input class="end_date" name="end_date"></input>
+  </span>
   <button class="submit btn btn-primary">Submit</button>
  </form>
 </div>
