@@ -7,13 +7,12 @@
   "defaultLocale": "en",
   "private": true,
   "location": "nav_bar",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "frameworkVersion": "1.0",
   "parameters": [
   {
     "name": "Auto Load",
-    "type": "checkbox",
-    "default": "true"
+    "type": "checkbox"
   },
   {
     "name": "Default Filter",
@@ -23,7 +22,7 @@
   {
     "name": "Days Back",
     "type": "number",
-    "default": "5"
+    "default": "10"
   }
   ]
 }

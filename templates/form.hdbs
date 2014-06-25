@@ -1,7 +1,7 @@
 <div class="form">
  
  <form>
- {{t "app.filters"}}
+ {{t "app.filters"}}:
   <select id="filter_select" name="filter_select">
     <option value="all">
       all
@@ -33,14 +33,14 @@
     <option value="bad_without_comment">
       bad_without_comment
     </option>
-  </select> &nbsp;&nbsp;&nbsp;
+  </select> &nbsp;&nbsp;
   {{!-- <span>Days back: <input type="number" id="range" min="1" max="100" value="{{daysBack}}"></input></span> --}}
   <span class="field">
     Start Date (UTC): <input class="start_date" name="start_date"></input> 
-  </span>
+  </span> &nbsp;&nbsp;
   <span class="field">
     End Date (UTC): <input class="end_date" name="end_date"></input>
-  </span>
+  </span> &nbsp;&nbsp;
   <button class="submit btn btn-primary">Submit</button>
  </form>
 </div>
