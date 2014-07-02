@@ -6,13 +6,13 @@
 <br>
 <br>
 <div class="alert hidden">There is an outstanding bug with Chrome causing the file to download without a .csv extension. Just rename it to something.csv and open as normal.</div>
-<div class="csv well well-medium>
+<div class="csv well well-medium">
   <div class="ratings">
     <table class="table">
       <thead>
         <th>
           <td>Ticket</td>
-          <td colspan='2'>Rating</td>
+          <td>Rating</td>
           <td>Assignee</td>
           <td>Created</td>
           <td>Comment</td>
@@ -22,9 +22,6 @@
         <tr class="row">
           <td class="ticket_id" data-rating-id="{{id}}">
             <a href="#/tickets/{{ticket_id}}">#{{ticket_id}}</a>
-          </td>
-          <td class="thumb">
-            {{# if thumb.length}}{{{thumb}}}{{else}}<em>n/a</em>{{/if}}
           </td>
           <td class="score">
             {{# if score_label.length}}{{{score_label}}}{{/if}}

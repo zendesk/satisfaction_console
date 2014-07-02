@@ -3,6 +3,11 @@
 # Satisfaction Console App
 A full-page nav bar app for pulling ticket satisfaction ratings from the past x days and providing a ticket export CSV via data-uri.
 
+![Animated GIF](http://recordit.co/nqMdZgUgUD.gif)
+
+![Form](http://i.imgur.com/70RZfBK.png)
+
+![Results](http://i.imgur.com/85Of4Ft.png)
 
 ### Compatibility Note
 This app depends on full browser support of data-uris. Some versions of IE do not appear to offer full support so may not work. Other browsers don't support naming the file so you'll have to rename it with a .csv extension yourself.
