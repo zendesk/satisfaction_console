@@ -3,7 +3,7 @@
 # Satisfaction Console App
 A full-page nav bar app for pulling ticket satisfaction ratings from the past x days and providing a ticket export CSV via data-uri.
 
-![Animated GIF](http://recordit.co/nqMdZgUgUD.gif)
+![Animated GIF](http://i.imgur.com/y9Rle0H.gif)
 
 ![Form](http://i.imgur.com/70RZfBK.png)
 

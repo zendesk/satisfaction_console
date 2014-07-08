@@ -3,6 +3,7 @@
     defaultState: 'loading',
     events: {
       'app.activated':'getDate',
+      'pane.activated':'loadSettings',
       'click .submit':'loadChoices',
       'click .show_form': 'loadForm',
       //request events
@@ -16,7 +17,6 @@
         } else {
           return { url: '/api/v2/satisfaction_ratings.json?sort_order=desc&score=' + filter };
         }
-        
       },
       getAllRatings: function(next_page_url) { //not strictly necessary (see below)
         if (next_page_url) {
@@ -63,7 +63,7 @@
       }
       this.datePretty = m + '/' + d + '/' + y;
       this.dateMs = Date.now();
-      this.loadSettings();
+      // this.loadSettings();
     },
     loadSettings: function() {
       this.filter = this.setting('Default Filter');

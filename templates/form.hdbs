@@ -2,7 +2,7 @@
  
  <form>
  {{t "app.filters"}}:
-  <select id="filter_select" name="filter_select">
+  <select id="filter_select" class="filter_select" name="filter_select">
     <option value="all">
       all
     </option>
