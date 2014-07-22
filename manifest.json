@@ -1,11 +1,11 @@
 {
   "name": "Satisfaction Console",
   "author": {
-    "name": "Joe McCarron",
-    "email": "joe@zendesk.com"
+    "name": "Zendesk Labs",
+    "email": "zendesklabs@zendesk.com"
   },
   "defaultLocale": "en",
-  "private": true,
+  "private": false,
   "location": "nav_bar",
   "version": "1.0.8",
   "frameworkVersion": "1.0",
