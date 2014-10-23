@@ -83,8 +83,8 @@
       this.$('#filter_select').val(this.filter);
       var daysBack = this.setting('Days Back');
       var start_date = new Date(new Date().setDate(new Date().getDate() - daysBack));
-      this.$('.start_date').datepicker().datepicker("setDate", start_date);
-      this.$('.end_date').datepicker();
+      this.$('.start_date').datepicker({ dateFormat: "yy-mm-dd" }).datepicker("setDate", start_date);
+      this.$('.end_date').datepicker({ dateFormat: "yyyy-mm-dd" });
       this.$('.end_date').datepicker("setDate", new Date());
     },
     loadChoices: function(e) {
@@ -156,7 +156,6 @@
         var created_date = Date.parse(rating.created_at);
         return created_date >= start_date && created_date <= end_date;
       });
-      // console.log(this.unencoded);
       if(!this.unencoded[0]) {
         services.notify('No ratings in range.', 'error');
         this.loadForm();
