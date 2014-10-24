@@ -84,7 +84,7 @@
       var daysBack = this.setting('Days Back');
       var start_date = new Date(new Date().setDate(new Date().getDate() - daysBack));
       this.$('.start_date').datepicker({ dateFormat: "yy-mm-dd" }).datepicker("setDate", start_date);
-      this.$('.end_date').datepicker({ dateFormat: "yyyy-mm-dd" });
+      this.$('.end_date').datepicker({ dateFormat: "yy-mm-dd" });
       this.$('.end_date').datepicker("setDate", new Date());
     },
     loadChoices: function(e) {
