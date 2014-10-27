@@ -65,14 +65,14 @@
       this.dateMs = Date.now();
       // this.loadSettings();
     },
-    loadSettings: function() {
-      this.filter = this.setting('Default Filter');
-      var autoLoad = this.setting('Auto Load');
-      this.daysBack = this.setting('Days Back');
-      if (autoLoad===true) {
-        this.loadRatings(this.filter);
-      } else{
-        this.loadForm();
+    loadSettings: function(data) {
+
+      if(data.firstLoad) {
+        console.log('first load');
+        this.filter = this.setting('Default Filter');
+        var autoLoad = this.setting('Auto Load');
+        this.daysBack = this.setting('Days Back');
+        if (autoLoad===true) { this.loadRatings(this.filter); } else { this.loadForm(); }
       }
     },
     loadForm: function(e) {
