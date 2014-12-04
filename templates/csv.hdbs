@@ -2,7 +2,7 @@
 <strong>{{t "app.range"}}:</strong> {{startDate}} - {{endDate}}<br><br>
 
 <button class="show_form btn"><i class="icon-edit"></i> Change Options</button> &nbsp;
-<a href="data:text/csv;charset=utf-8,Ticket%20ID%2CScore%2CAssignee%2CCreated%2CComment%0A{{#encoded_ratings}}#{{ticket_id}}%2C{{score}}%2C{{assignee}}%2C{{created_at}}%2C%22{{comment}}%22%0A{{/encoded_ratings}}" download="satisfaction_ratings.csv" class="btn"><i class="icon-download"></i> Download CSV</a>
+<a href="data:text/csv;charset=utf-8,id%2CScore%2CAssignee%2CCreated%2CComment%0A{{#encoded_ratings}}{{ticket_id}}%2C{{score}}%2C{{assignee}}%2C{{created_at}}%2C%22{{comment}}%22%0A{{/encoded_ratings}}" download="satisfaction_ratings.csv" class="btn"><i class="icon-download"></i> Download CSV</a>
 <br>
 <br>
 <div class="alert hidden">There is an outstanding bug with Chrome causing the file to download without a .csv extension. Just rename it to something.csv and open as normal.</div>
